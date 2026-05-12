@@ -596,17 +596,14 @@ export default function App() {
           *::-webkit-scrollbar{display:none}
           *{scrollbar-width:none;-ms-overflow-style:none}
         `}</style>
-        <div style={{background:screen==="login"||screen==="portal"?C.navy:C.bg,padding:"10px 20px 6px",display:"flex",justifyContent:"space-between",flexShrink:0}}>
-          <span style={{fontSize:11,fontWeight:600,color:screen==="portal"||screen==="login"?"#fff":C.textPrimary}}>9:41</span>
-          <span style={{fontSize:11,color:screen==="portal"||screen==="login"?"rgba(255,255,255,.7)":C.textSecondary}}>●●● WiFi 🔋</span>
-        </div>
+        
         {screen==="login"&&<div style={{flex:1,overflowY:"auto"}}><LoginScreen onLogin={handleLogin} visible={loginVisible}/></div>}
         {screen==="welcome"&&<div style={{flex:1,overflowY:"auto"}}><WelcomeScreen user={user} onContinue={handleContinue}/></div>}
         {screen==="portal"&&<>
           <div style={{background:C.navy,padding:"6px 16px 10px",display:"flex",alignItems:"center",justifyContent:"space-between",flexShrink:0,position:"relative"}}>
-            <div style={{display:"flex",alignItems:"center",gap:8}}>
-              <CyntegrityLogo size={28}/>
-              <span style={{fontSize:13,fontWeight:700,color:"#fff"}}>MyRBQM Portal App</span>
+            <div style={{display:"flex",alignItems:"center",gap:10}}>
+              <CyntegrityLogo size={36}/>
+              <span style={{fontSize:16,fontWeight:700,color:"#fff"}}>MyRBQM Portal App</span>
             </div>
             <div style={{position:"relative"}}>
               <button onClick={()=>setShowNotif(!showNotif)} style={{background:"none",border:"none",cursor:"pointer",fontSize:20,color:"#fff",display:"flex",alignItems:"center",position:"relative",padding:4}}>
