@@ -589,8 +589,8 @@ export default function App() {
   const totalAlerts=ALL_ALERTS.filter(a=>a.type==="crit"||a.type==="warn").length;
 
   return (
-    <div style={{display:"flex",justifyContent:"center",alignItems:"center",minHeight:"100vh",background:"#d1d9e6",padding:20}}>
-      <div style={{width:375,height:780,background:C.card,borderRadius:44,boxShadow:"0 24px 70px rgba(0,0,0,.22)",overflow:"hidden",display:"flex",flexDirection:"column",border:"8px solid #1a2233",position:"relative"}}>
+    <div style={{display:"flex",justifyContent:"center",alignItems:"center",minHeight:"100vh",background:"#d1d9e6"}}>
+      <div style={{width:"100%",maxWidth:480,height:"100vh",background:C.card,overflow:"hidden",display:"flex",flexDirection:"column",position:"relative"}}>
         {!splashDone&&<SplashScreen onDone={handleSplashDone}/>}
         <style>{`
           *::-webkit-scrollbar{display:none}
