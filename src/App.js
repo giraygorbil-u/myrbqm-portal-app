@@ -1,6 +1,7 @@
 /* eslint-disable */
 import cyntegrityLogo from './cyntegrity-logo.png';
 import { useState, useEffect } from "react";
+import emailjs from '@emailjs/browser';
 
 const USERS = [
   { email:"demo@cyntegrity.com", password:"demo123", name:"Jane Mitchell", initials:"JM", role:"Clinical Monitor" },
@@ -33,6 +34,11 @@ const STUDIES = [
   { _id:"s12", studyId:"CYN-2024-09", title:"RENAL-GUARD III", phase:"III", indication:"Nephrology", sponsor:"KidneyCare SA", sites:48, enrolled:534, target:600, status:"at_risk", riskScore:51, signals:11, startDate:"2023-05-15", endDate:"2026-02-28", kris:[{name:"Enrollment Rate",value:70,threshold:80,unit:"%",ok:false},{name:"Data Completeness",value:84,threshold:90,unit:"%",ok:false},{name:"Protocol Deviation",value:6.3,threshold:5,unit:"%",ok:false},{name:"SAE Reporting",value:93,threshold:95,unit:"%",ok:false}], signalList:[{type:"crit",msg:"All KRIs below threshold — escalation triggered"},{type:"warn",msg:"Site closures being considered at 3 locations"},{type:"crit",msg:"Sponsor review meeting scheduled urgently"}], siteList:[{id:"US-15",country:"USA",patients:78,status:"crit"},{id:"BR-01",country:"Brazil",patients:62,status:"warn"},{id:"MX-02",country:"Mexico",patients:55,status:"warn"}],
     bubbles:[{r:13,color:"#e24b4a"},{r:11,color:"#ba7517"},{r:12,color:"#e24b4a"},{r:10,color:"#e24b4a"},{r:11,color:"#ba7517"},{r:9,color:"#e24b4a"},{r:10,color:"#e24b4a"},{r:8,color:"#ba7517"}] },
 ];
+
+const EMAILJS_SERVICE = 'service_e2y2ntt';
+const EMAILJS_REQUEST_TEMPLATE = 'template_9hmtuzo';
+const EMAILJS_REVIEW_TEMPLATE = 'template_umy39pz';
+const EMAILJS_PUBLIC_KEY = 'n8OqD6LfB3l7bkcYy';
 
 const C = { navy:"#0f2a4a", teal:"#1d9e75", blue:"#185fa5", warn:"#ba7517", danger:"#e24b4a", purple:"#534ab7", bg:"#f0f4f8", card:"#ffffff", border:"#e2e8f0", textPrimary:"#1a2233", textSecondary:"#64748b", textMuted:"#94a3b8" };
 const statusCfg = { active:{label:"Active",bg:"#eaf3de",color:"#3b6d11"}, at_risk:{label:"At Risk",bg:"#faeeda",color:"#854f0b"}, critical:{label:"Critical",bg:"#fcebeb",color:"#a32d2d"}, planning:{label:"Planning",bg:"#e6f1fb",color:"#185fa5"}, completed:{label:"Completed",bg:"#eeedfe",color:"#534ab7"} };
@@ -285,7 +291,20 @@ function RequestStudyModal({ onClose }) {
   const [form,setForm]=useState({title:"",indication:"",phase:"",sponsor:"",sites:"",notes:""});
   const [submitted,setSubmitted]=useState(false);
   const set=(k,v)=>setForm(f=>({...f,[k]:v}));
-  const submit=()=>{ if(!form.title||!form.indication) return; setSubmitted(true); };
+  const submit=()=>{
+  if(!form.title||!form.indication) return;
+  emailjs.send(EMAILJS_SERVICE, EMAILJS_REQUEST_TEMPLATE, {
+    study_title: form.title,
+    indication: form.indication,
+    phase: form.phase,
+    sponsor: form.sponsor,
+    sites: form.sites,
+    notes: form.notes,
+    from_name: "MyRBQM Portal User",
+    from_email: "portal@cyntegrity.com",
+  }, EMAILJS_PUBLIC_KEY);
+  setSubmitted(true);
+};
   return (
     <div style={{position:"absolute",inset:0,background:"rgba(0,0,0,0.5)",zIndex:200,display:"flex",alignItems:"flex-end"}}>
       <div style={{background:C.card,borderRadius:"20px 20px 0 0",width:"100%",maxHeight:"85%",overflowY:"auto",padding:"20px 18px 30px"}}>
@@ -504,7 +523,16 @@ function ProfileScreen({ user, onLogout, onUserUpdate }) {
   const handlePhoto=e=>{ const file=e.target.files[0];if(!file)return;const r=new FileReader();r.onload=ev=>setPhoto(ev.target.result);r.readAsDataURL(file); };
   const saveProfile=()=>{ onUserUpdate({...user,name:editName,email:editEmail,initials}); setEditing(false); };
   const sendHelp=()=>{ if(!helpMsg.trim())return;setHelpSent(true);setHelpMsg("");setTimeout(()=>setHelpSent(false),3000); };
-  const submitReview=()=>{ if(rating===0)return;setReviewSubmitted(true); };
+  const submitReview=()=>{
+  if(rating===0)return;
+  emailjs.send(EMAILJS_SERVICE, EMAILJS_REVIEW_TEMPLATE, {
+    rating: rating,
+    review_note: reviewNote,
+    from_name: user.name,
+    from_email: user.email,
+  }, EMAILJS_PUBLIC_KEY);
+  setReviewSubmitted(true);
+};
   return (
     <PageTransition id="profile">
       <div style={{background:C.bg,minHeight:"100%",padding:"14px 12px",paddingBottom:30}}>
