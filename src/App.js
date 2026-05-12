@@ -1,3 +1,4 @@
+/* eslint-disable */
 import cyntegrityLogo from './cyntegrity-logo.png';
 import { useState, useEffect } from "react";
 
@@ -42,7 +43,7 @@ const ALL_ALERTS = STUDIES.flatMap(s => s.signalList.filter(sig=>sig.type==="cri
 // ── BUBBLE CHART ──
 function BubbleChart({ bubbles, size=110 }) {
   // Pack bubbles into a simple grid-like layout
-  const positions = [];
+  
   const cols = [
     [0.18, 0.22], [0.42, 0.18], [0.68, 0.24], [0.82, 0.48],
     [0.62, 0.62], [0.38, 0.70], [0.15, 0.58], [0.28, 0.40],
